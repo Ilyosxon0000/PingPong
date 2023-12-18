@@ -19,10 +19,11 @@ class Order(models.Model):
     created_date=models.DateTimeField(auto_now_add=True)
     changed_date=models.DateTimeField(auto_now=True)
     # TODO user informations
+    
 class TableLog(models.Model):
     table=models.ForeignKey(Table,related_name="table_logs",on_delete=models.PROTECT)
-    start_time=models.TimeField()
-    end_time=models.TimeField()
+    start_time=models.DateTimeField()
+    end_time=models.DateTimeField()
     total_price=models.IntegerField(default=0)
     description=models.TextField(blank=True,null=True)
     created_date=models.DateTimeField(auto_now_add=True)
@@ -30,5 +31,11 @@ class TableLog(models.Model):
 
     def get_total_price(self):
         total_hour=self.start_time.hour-self.end_time.hour
+        total_minute=self.start_time.minute-self.end_time.minute
+        total_minute=(total_hour*60)+total_minute
+        minute_price=self.table.price/60
+        total_price=total_minute*minute_price
+        return total_price
+
 
 
